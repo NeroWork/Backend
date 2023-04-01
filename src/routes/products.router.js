@@ -55,7 +55,7 @@ productsRouter.post("/", async (req, res) => {
 
 productsRouter.put("/:pid", async (req, res) => {
     let update = req.body;
-    let idaux = req.params.pid;
+    let idaux = parseInt(req.params.pid);
     if(idaux === undefined || isNaN(idaux)){
         return res.status(400).send({status:"error", error:"Invalid data"});
     }
@@ -69,7 +69,7 @@ productsRouter.put("/:pid", async (req, res) => {
 })
 
 productsRouter.delete("/:pid", async (req,res) => {
-    let idaux = req.params.pid;
+    let idaux = parseInt(req.params.pid);
     if(idaux === undefined || isNaN(idaux)){
         return res.status(400).send({status:"error", error:"Invalid data"});
     }
