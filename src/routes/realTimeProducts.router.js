@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { ProductManager } = require("../utils/productManager");
 
-const productsRouter = Router();
+const realtimeRouter = Router();
 let products = new ProductManager();
 
 //--------------------- FUNCIONES AUXILIARES -----------------
@@ -21,19 +21,19 @@ const validar = async (productoNuevo) => {
     }
 }
 
-productsRouter.get("/", async (req, res) =>{
+realtimeRouter.get("/", async (req, res) =>{
     let productos = await products.getProducts();
     let limit = req.query.limit;
     if(limit){
         productos = productos.splice(0,limit);
-        res.render("home",{productos});
+        res.render("realTimeProducts",{productos});
     }
     if(!limit){
-        res.render("home",{productos});
+        res.render("realTimeProducts",{productos});
     }
 })
 
-productsRouter.get("/:pid", async (req,res) => {
+realtimeRouter.get("/:pid", async (req,res) => {
     let idauxiliar = parseInt(req.params.pid);
     let productoNecesitado = await products.getProductById(idauxiliar);
     if(productoNecesitado){
@@ -43,7 +43,7 @@ productsRouter.get("/:pid", async (req,res) => {
     }
 })
 
-productsRouter.post("/", async (req, res) => {
+realtimeRouter.post("/", async (req, res) => {
     let producto = req.body;
     const validacion = await validar(producto);
     if(!validacion){
@@ -53,7 +53,7 @@ productsRouter.post("/", async (req, res) => {
     res.send({status:"success", message:"Product uploaded"});
 })
 
-productsRouter.put("/:pid", async (req, res) => {
+realtimeRouter.put("/:pid", async (req, res) => {
     let update = req.body;
     let idaux = parseInt(req.params.pid);
     if(idaux === undefined || isNaN(idaux)){
@@ -68,7 +68,7 @@ productsRouter.put("/:pid", async (req, res) => {
     }
 })
 
-productsRouter.delete("/:pid", async (req,res) => {
+realtimeRouter.delete("/:pid", async (req,res) => {
     let idaux = parseInt(req.params.pid);
     if(idaux === undefined || isNaN(idaux)){
         return res.status(400).send({status:"error", error:"Invalid data"});
@@ -84,5 +84,5 @@ productsRouter.delete("/:pid", async (req,res) => {
 })
 
 module.exports = {
-    productsRouter
+    realtimeRouter
 }

@@ -31,7 +31,7 @@ class CartManager{
             carritos = [{id: idAux, products}];
             await this.guardarBase(JSON.stringify(carritos));
         } else {
-            let newId = carritos[id-1].id + 1;
+            let newId = carritos[idAux-1].id + 1;
             carritos = [...carritos, {id: newId, products}];
             await this.guardarBase(JSON.stringify(carritos));
         }
