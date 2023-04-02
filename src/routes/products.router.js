@@ -75,7 +75,7 @@ productsRouter.delete("/:pid", async (req,res) => {
     }
     let productoNuevo = products.getProductById(idaux);
     if(productoNuevo){
-        products.deleteProduct(idaux);
+        await products.deleteProduct(idaux);
         return res.send({status:"success", message:"Product deleted"});
     } else{
         res.status(400).send({status:"error", error:"Invalid data"});

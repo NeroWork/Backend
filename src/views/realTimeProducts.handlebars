@@ -2,31 +2,27 @@
     <form action="">
         <h2>Add an item</h2>
         <label for="title">Titulo</label>
-        <input type="text" name="title">
+        <input type="text" name="title" id="title-id">
         <label for="description">Descripcion</label>
-        <input type="text" name="description">
+        <input type="text" name="description" id="description-id">
         <label for="img">Thumbnail link</label>
-        <input type="text" name="img">
+        <input type="text" name="img" id="img-id">
         <label for="price">Precio</label>
-        <input type="text" name="price">
+        <input type="number" name="price" id="price-id">
         <label for="stock">Stock</label>
-        <input type="text" name="stock">
-        <label for="id">ID</label>
-        <input type="text" name="id">
+        <input type="number" name="stock" id="stock-id">
         <input type="submit" id="submit-button">
     </form>
 </div>
 <div>
     <h2>Delete an item</h2>
     <label for="deleteInput">Id:</label>
-    <input type="text" id="delete-input" name="deleteInput">
+    <input type="number" id="delete-input" name="deleteInput">
 </div>
 
-<div id="p-c">
+<div id="p-c"></div>
 
-</div>
-
-{{#each productos}}
+{{!-- {{#each productos}}
     <div>
         <h2>{{this.title}}</h2>
         <p>{{this.description}}</p>
@@ -35,7 +31,7 @@
         <p>Stock: {{this.stock}}</p>
         <p>ID: {{this.id}}</p>
     </div>
-{{/each}}
+{{/each}} --}}
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/index.js"></script>
