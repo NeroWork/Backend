@@ -46,7 +46,7 @@ socket.on("actualizar", data => {
         <img src=${element.thumbnail} alt="Imagen del producto">
         <p>Precio: ${element.price}</p>
         <p>Stock: ${element.stock}</p>
-        <p>ID: ${element.id}</p>
+        <p>ID: ${element._id}</p>
     </div>`
     });
     contenedor_prod.innerHTML=htmlcontent;

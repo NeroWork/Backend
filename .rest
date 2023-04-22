@@ -1,0 +1,53 @@
+POST http://localhost:8080/api/producto
+Content-Type: application/json
+
+{
+    "title":"titulo 1",
+    "description":"Descripcion 1",
+    "thumbnail":"thumbnail 1",
+    "price":42,
+    "stock":3,
+    "code":"xdadasdqwr"
+}
+
+###
+
+GET http://localhost:8080/api/producto
+
+###
+GET http://localhost:8080/api/producto/6443e5692ae03ef850195720
+
+###
+PUT http://localhost:8080/api/producto/6443e5692ae03ef850195720
+Content-Type: application/json
+
+{
+    "title":"titulo 2",
+    "description":"Descripcion 2",
+    "thumbnail":"thumbnail 2",
+    "price":42,
+    "stock":3,
+    "code":"xdadasdqwr"
+}
+
+###
+
+DELETE http://localhost:8080/api/producto/6443e5692ae03ef850195720
+
+###
+POST http://localhost:8080/api/carrito/
+Content-Type: application/json
+
+{
+    "products": [{
+        "id": "312as23",
+        "quantity": 3
+    },{
+        "id": "1111111",
+        "quantity": 222
+    }
+    ]
+}
+
+###
+POST http://localhost:8080/api/carrito/64440ab398e383d430549171/products/1

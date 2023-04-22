@@ -1,66 +1,78 @@
-//  -------------- REQUIRE ----------------
 const express = require("express");
-const {productsRouter} = require("./routes/products.router");
-const {cartRouter} = require("./routes/cart.router");
+const { router } = require("./routes");
 const handlebars = require("express-handlebars");
+const { configObj } = require("./config/config");
 const {Server} = require("socket.io");
-const {realtimeRouter} = require("./routes/realTimeProducts.router");
-const { ProductManager } = require("./utils/productManager");
-const { CartManager } = require("./utils/cartManager");
+const { ProductManagerMongo } = require("./Dao/managerProductMongo");
+const { ChatManagerMongo } = require("./Dao/managerChatMongo");
 
-//------------ MAPEADOR DE URL -------------
+//-----------CONFIGURAR SERVER -------------------
 const app = express();
-app.use(express.urlencoded({extended:true}));
-app.use(express.json());
-app.use(express.static(__dirname+"/public"));
+const PORT = 8080;
 
-//--------------CUESTIONES DE HANDLEBARS----------------------
+//----------------DB CONFIG---------------------------
+configObj.connectDB();
+
+//----------------------MAPEADOR URL----------------------------
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use("/static", express.static(__dirname+"/public"));
+
+//-------------handlebars-----------------
 app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname+"/views");
 app.set("view engine", "handlebars");
-//-------------- IMPLEMENTACION DEL SERVIDOR -----------------
-app.use("/api/products",productsRouter);
-app.use("/api/carts",cartRouter);
-app.use("/realtimeproducts", realtimeRouter);
-const httpServer = app.listen(8080, () => console.log("server open"));
-//----------------------ELEMENTOS DE PRUEBA------------------------
-let products = new ProductManager();
-let carts = new CartManager();
+//------------ROUTERS--------------
+app.use(router);
 
-const validar = async (productoNuevo) => {
-    if(productoNuevo.title && productoNuevo.description && productoNuevo.price && productoNuevo.stock){ //SI EXISTEN CAMPOS
-        return true;
-    } else {
-        return false;
+//--------------LISTEN---------------
+const httpServer = app.listen(PORT, error => {
+    if(error){
+        console.log(error);
     }
-}
-//-----------------------SOCKET.IO-----------------------------
+    console.log(`Server open ${PORT}`);
+})
+
+//---------------SOCKET IO--------------
 const socketServer = new Server(httpServer);
+
 //prueba
+let productManager = new ProductManagerMongo();
+let chatManager = new ChatManagerMongo();
+
 socketServer.on("connection", async (socket) => {
     console.log("Nuevo cliente conectado");
-    let productsArray = await products.getProducts();
+    let productsArray = await productManager.getProducts();
     socketServer.emit("actualizar", {productsArray});
 
+    let chatArray = await chatManager.getMessages();
+    socketServer.emit("actualizarMensajes", {chatArray});
+
+    socket.on("add_message", async (conjuntoMensaje) => {
+       const resp = await chatManager.addMessage(conjuntoMensaje);
+       chatArray = await chatManager.getMessages();
+       socketServer.emit("actualizarMensajes", {chatArray});
+    })
+
     socket.on("add_item", async (productAux) =>{
-        await products.addProduct(productAux);
-        productsArray = await products.getProducts();
+        await productManager.addProduct(productAux);
+        productsArray = await productManager.getProducts();
         socketServer.emit("actualizar", {productsArray});
         console.log("producto agregado");
     })
 
     socket.on("delete_item", async (idaux) =>{
-        idaux = parseInt(idaux);
-        if(idaux === undefined || isNaN(idaux)){
+        console.log(idaux);
+        console.log(typeof(idaux));
+        if(idaux === undefined){
             return console.log("El id ingresado no es valido");
         }
-        let productoNuevo = await products.getProductById(idaux);
-        if(productoNuevo){
-            await products.deleteProduct(idaux);
-            productsArray = await products.getProducts()
+        try {
+            await productManager.deleteProduct(idaux);
+            productsArray = await productManager.getProducts();
             socketServer.emit("actualizar", {productsArray});
-        } else{
-            console.log("No existe producto con ese id");
+        } catch (error) {
+            return console.log(error);
         }
     })
 })
