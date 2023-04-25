@@ -1,11 +1,11 @@
 const { productModel } = require("../models/product.model.js")
 
 class ProductManagerMongo {
-    async getProducts(){
-        return await productModel.find();
+    async getProducts(query, config){
+        return await productModel.paginate(query,config);
     }
     async getProductById(pid){
-        return await productModel.findById(pid);
+        return await productModel.findById(pid).lean();
     }
     async addProduct(newProduct){
         return await productModel.create(newProduct);

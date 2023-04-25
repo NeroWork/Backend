@@ -2,12 +2,11 @@ POST http://localhost:8080/api/producto
 Content-Type: application/json
 
 {
-    "title":"titulo 1",
-    "description":"Descripcion 1",
-    "thumbnail":"thumbnail 1",
-    "price":42,
-    "stock":3,
-    "code":"xdadasdqwr"
+    "title":"titulo 5",
+    "description":"Descripcion 5",
+    "thumbnail":"https://static.tvtropes.org/pmwiki/pub/images/magic_card.png",
+    "price":333333,
+    "stock":112
 }
 
 ###
@@ -32,22 +31,70 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:8080/api/producto/6443e5692ae03ef850195720
+DELETE http://localhost:8080/api/producto/6446bd3b4bd56b1e95343784
 
 ###
 POST http://localhost:8080/api/carrito/
 Content-Type: application/json
 
 {
-    "products": [{
-        "id": "312as23",
-        "quantity": 3
-    },{
-        "id": "1111111",
-        "quantity": 222
-    }
-    ]
 }
 
 ###
-POST http://localhost:8080/api/carrito/64440ab398e383d430549171/products/1
+POST http://localhost:8080/api/carrito/6446fdc7f8494c1c15b6b2b1/products/64471c2b017deda933d139de
+
+###
+DELETE http://localhost:8080/api/carrito/6446fdc7f8494c1c15b6b2b1/products/64471c2b017deda933d139de
+###
+PUT http://localhost:8080/api/carrito/6446fdc7f8494c1c15b6b2b1
+Content-Type: application/json
+
+{
+  "status": "success",
+  "payload": [
+    {
+      "_id": "64442586c288c3c5597f51d7",
+      "title": "qweqwe",
+      "description": "qweqwe1",
+      "thumbnail": "https://img.freepik.com/vector-gratis/canon-aislado_1308-28134.jpg",
+      "price": 4444,
+      "stock": 2,
+      "__v": 0,
+      "id": "64442586c288c3c5597f51d7"
+    },
+    {
+      "_id": "6446bd8b4bd56b1e9534378b",
+      "title": "titulo 2",
+      "description": "Descripcion 2",
+      "thumbnail": "https://static.tvtropes.org/pmwiki/pub/images/magic_card.png",
+      "price": 42,
+      "stock": 3,
+      "__v": 0,
+      "id": "6446bd8b4bd56b1e9534378b"
+    }
+  ],
+  "totalPages": 1,
+  "prevPage": null,
+  "nextPage": null,
+  "page": 1,
+  "hasPrevPage": false,
+  "hasNextPage": false,
+  "prevLink": null,
+  "nextLink": null
+}
+
+###
+
+PUT http://localhost:8080/api/carrito/6446fdc7f8494c1c15b6b2b1/products/64442586c288c3c5597f51d7
+Content-Type: application/json
+
+{
+    "quantityUpdate": 14
+}
+
+###
+
+DELETE http://localhost:8080/api/carrito/6446fdc7f8494c1c15b6b2b1
+
+###
+GET http://localhost:8080/api/carrito/6446fdc7f8494c1c15b6b2b1

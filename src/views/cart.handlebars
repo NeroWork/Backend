@@ -1,0 +1,9 @@
+<div>
+    <h1>Id del Carrito: {{_id}}</h1>
+    {{#each products}}
+    <h2>Titulo: {{this.product.title}}</h2>
+    <h3>Descripcion: {{this.product.description}}</h3>
+    <img src="{{this.product.thumbnail}}" width="200px" alt="Imagen de {{this.product.title}}">
+    <h3>Id Producto: {{this.product._id}}</h3>
+    {{/each}}
+</div>
