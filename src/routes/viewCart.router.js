@@ -6,8 +6,14 @@ const cartManager = new CartManager();
 
 viewCartRouter.get("/:cid", async (req, res) => {
     const cid = req.params.cid;
-    const cart = await cartManager.getCartById(cid);
-    res.render("cart",cart[0]);
+    try {
+        const cart = await cartManager.getCartById(cid);
+        res.render("cart",cart[0]);
+    } catch (error) {
+        res.render("error");
+    }
+
+
 })
 
 module.exports = {

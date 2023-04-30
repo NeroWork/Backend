@@ -5,6 +5,8 @@ const { configObj } = require("./config/config");
 const {Server} = require("socket.io");
 const { ProductManagerMongo } = require("./Dao/managerProductMongo");
 const { ChatManagerMongo } = require("./Dao/managerChatMongo");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 
 //-----------CONFIGURAR SERVER -------------------
 const app = express();
@@ -17,6 +19,14 @@ configObj.connectDB();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use("/static", express.static(__dirname+"/public"));
+//----------------------Cookies------------------------
+app.use(cookieParser("sercretoIncreiblementeSeguro"));
+//_--------------------Session--------------------------
+app.use(session({
+    secret: "sercretoIncreiblementeSeguro",
+    resave: true,
+    saveUninitialized: true
+}));
 
 //-------------handlebars-----------------
 app.engine("handlebars", handlebars.engine());

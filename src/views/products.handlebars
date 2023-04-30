@@ -1,17 +1,22 @@
 <div>
+    <div>
     {{#each docs}}
         <a href="/views/products/{{this._id}}?page={{../page}}&limit={{../limit}}"><h3>Titulo: {{this.title}}</h3></a>
         <h4>Descripcion: {{this.description}}</h4>
         <img src="{{this.thumbnail}}" width="200px" alt="Foto de {{this.title}}">
         <br>
-        <button>Add to cart</button>
+        <button action="">Add to cart</button>
     {{/each}}
+    </div>
     <br>
     <br>
     {{#if hasPrevPage}}
-    <a href="/views/products?page={{prevPage}}&limit={{limit}}"><button>prevPage</button></a>
+    <a href="/views/products?page={{prevPage}}&limit={{limit}}&sort={{sort}}&query={{query}}"><button>prevPage</button></a>
     {{/if}}
     {{#if hasNextPage}}
-    <a href="/views/products?page={{nextPage}}&limit={{limit}}"><button>nextPage</button></a>
+    <a href="/views/products?page={{nextPage}}&limit={{limit}}&sort={{sort}}&query={{query}}"><button onclick="">nextPage</button></a>
     {{/if}}
 </div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="../static/js/products.js"></script>

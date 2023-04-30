@@ -22,20 +22,29 @@ viewProductRouter.get("/", async (req, res) => {
         config = {limit, page, lean: true};
     }
     //Envio los datos
-    const resp = await productManager.getProducts(query, config);
+    let resp = await productManager.getProducts(query, config);
+    resp = {...resp, sort: sort, query: JSON.stringify(query)}
     console.log(resp);
+    if(resp.totalPages < page || page < 0){
+        return res.send("Error page not found");
+    }
     res.render("products",resp)
 })
 
 viewProductRouter.get("/:pid", async (req, res) => {
-    const {limit = 10, page = 1 } = req.query;
-    const pid = req.params.pid;
-    const prod = await productManager.getProductById(pid);
-    res.render("oneProduct", {
-        limit,
-        page,
-        prod
-    })
+    try {
+        const {limit = 10, page = 1 } = req.query;
+        const pid = req.params.pid;
+        const prod = await productManager.getProductById(pid);
+        res.render("oneProduct", {
+            limit,
+            page,
+            prod
+        })
+    } catch (error) {
+        res.render("error")
+    }
+
 })
 
 module.exports = {
