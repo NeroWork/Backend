@@ -1,10 +1,11 @@
 const {Router} = require("express");
 const { ProductManagerMongo } = require("../Dao/managerProductMongo");
+const { authSession } = require("../middleware/auth.middleware");
 
 const productManager = new ProductManagerMongo();
 const viewProductRouter = Router();
 
-viewProductRouter.get("/", async (req, res) => {
+viewProductRouter.get("/",authSession, async (req, res) => {
     //Traigo los params y defino valores por defecto
     const {limit=10, page=1, sort = null} = req.query;
     let {query = null} = req.query;
@@ -23,7 +24,7 @@ viewProductRouter.get("/", async (req, res) => {
     }
     //Envio los datos
     let resp = await productManager.getProducts(query, config);
-    resp = {...resp, sort: sort, query: JSON.stringify(query)}
+    resp = {...resp, sort: sort, query: JSON.stringify(query), user_name: req.session.user.first_name}
     console.log(resp);
     if(resp.totalPages < page || page < 0){
         return res.send("Error page not found");
@@ -31,7 +32,7 @@ viewProductRouter.get("/", async (req, res) => {
     res.render("products",resp)
 })
 
-viewProductRouter.get("/:pid", async (req, res) => {
+viewProductRouter.get("/:pid",authSession, async (req, res) => {
     try {
         const {limit = 10, page = 1 } = req.query;
         const pid = req.params.pid;

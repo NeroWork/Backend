@@ -11,14 +11,16 @@ form.addEventListener("submit", async (e) => {
     });
     // console.log(object);
 
-    const resp = await fetch("http://localhost:8080/cookie/setSigned", {
+    const resp = await fetch("http://localhost:8080/session/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(object)
     })
-    console.log(await resp.text());
+    if(await resp.text() === "Success"){
+        location.href = "http://localhost:8080/views/products?limit=2"
+    };
 })
 
 const getCookie = async () => {

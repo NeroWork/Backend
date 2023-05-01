@@ -1,5 +1,6 @@
 <div>
     <div>
+    <h1>Bienvenido {{user_name}}!!</h1>
     {{#each docs}}
         <a href="/views/products/{{this._id}}?page={{../page}}&limit={{../limit}}"><h3>Titulo: {{this.title}}</h3></a>
         <h4>Descripcion: {{this.description}}</h4>

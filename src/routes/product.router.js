@@ -1,11 +1,12 @@
 const {Router} = require("express");
 const { ProductManagerMongo } = require("../Dao/managerProductMongo");
+const { authSession } = require("../middleware/auth.middleware");
 
 const productManager = new ProductManagerMongo();
 
 const productRouter = Router();
 
-productRouter.get("/", async (req, res) => {
+productRouter.get("/",authSession, async (req, res) => {
     //Traigo los params y defino valores por defecto
     const {limit=10, page=1, sort = null} = req.query;
     let {query = null} = req.query;

@@ -7,10 +7,12 @@ const { ProductManagerMongo } = require("./Dao/managerProductMongo");
 const { ChatManagerMongo } = require("./Dao/managerChatMongo");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const FileStore = require("session-file-store");
+const MongoStore = require("connect-mongo");
 
 //-----------CONFIGURAR SERVER -------------------
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 //----------------DB CONFIG---------------------------
 configObj.connectDB();
@@ -22,7 +24,30 @@ app.use("/static", express.static(__dirname+"/public"));
 //----------------------Cookies------------------------
 app.use(cookieParser("sercretoIncreiblementeSeguro"));
 //_--------------------Session--------------------------
+const fileStorage = FileStore(session);
+
+// ---- file storage server --------
+// app.use(session({
+//     store: new fileStorage({
+//         ttl: 100000,
+//         retires: 0,
+//         path: __dirname+"/sessionFiles"
+//     }),
+//     secret: "sercretoIncreiblementeSeguro",
+//     resave: true,
+//     saveUninitialized: true
+// }));
+
+//---------mongo server------------
 app.use(session({
+    store: MongoStore.create({
+        mongoUrl: configObj.url,
+        mongoOptions: {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        },
+        ttl: 10000
+    }),
     secret: "sercretoIncreiblementeSeguro",
     resave: true,
     saveUninitialized: true

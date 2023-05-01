@@ -27,10 +27,10 @@ cookieRouter.get("/login", (req, res) => {
     res.render("login");
 })
 cookieRouter.post("/setSigned", (req, res) => {
-    const {nombre, Email} = req.body;
+    const {first_name, password} = req.body;
     console.log(nombre);
-    console.log(Email);
-    res.cookie(nombre,Email, {maxAge:10000, signed: true}).send("okey")
+    console.log(email);
+    res.cookie(nombre,email, {maxAge:10000, signed: true}).send("okey")
 })
 module.exports = {
     cookieRouter
