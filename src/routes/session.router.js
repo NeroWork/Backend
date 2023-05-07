@@ -1,5 +1,7 @@
 const {Router} = require("express");
 const { userModel } = require("../models/user.model");
+const { createHash, isValidPassword } = require("../utils/bcrypt");
+const passport = require("passport");
 
 const sessionRouter = new Router()
 
@@ -82,47 +84,84 @@ sessionRouter.get("/register", async (req, res) => {
     res.render("register");
 })
 
-sessionRouter.post("/register", async (req, res) => {
-    const {first_name, last_name, email, age, password} = req.body;
-    const newUser = {
-        first_name,
-        last_name,
-        email,
-        age,
-        password
-    }
-    await userModel.create(newUser);
-    res.status(200).render("login")
+// sessionRouter.post("/register", async (req, res) => {
+//     const {first_name, last_name, email, age, password} = req.body;
+//     if(!first_name || !last_name || !email || !age || !password){
+//         return res.status(400).send({status: "error", message: "Faltan campos"});
+//     }
+//     const newUser = {
+//         first_name,
+//         last_name,
+//         email,
+//         age,
+//         password: createHash(password)
+//     }
+//     await userModel.create(newUser);
+//     res.status(200).render("login")
 
+// })
+
+// sessionRouter.post("/login", async (req, res) => {
+//     const {username, password} = req.body;
+
+//     console.log(username)
+//     console.log(password)
+//     const user = await userModel.findOne({first_name: username});
+
+//     if(!user){ return res.status(400).send("Username no valido")}
+//     if(!isValidPassword(user, password)){
+//         return res.status(403).send({status: "error", message: "Invalid password"});
+//     }
+//     delete user.password;
+
+//     if(user.email === "adminCoder@coder.com" && user.password === "adminCod3r123"){
+//         req.session.user = {
+//             logged: true,
+//             first_name: username,
+//             role: "admin"
+//         };
+//     } else{
+//         req.session.user = {
+//             logged: true,
+//             first_name: username,
+//             role: "user"
+//         };
+//     }
+
+
+//     res.status(200).send("Success");
+// })
+//------------------Register con Passport-------------------
+sessionRouter.post("/register",passport.authenticate("register",{failureRedirect: "/failregister"}), async (req, res) => {
+    res.send({status:"success", message:"User registered"});
 })
 
-sessionRouter.post("/login", async (req, res) => {
-    const {username, password} = req.body;
+sessionRouter.get("/failregister", async (req, res) => {
+    console.log("Failed strategy");
+    res.send({status: "Error", message: "Strategy error"});
+})
 
-    console.log(username)
-    console.log(password)
-    const user = await userModel.findOne({first_name: username, password: password});
-
-    if(!user){ return res.status(400).send("Datos ingresados invalidos") }
-
-    if(user.email === "adminCoder@coder.com" && user.password === "adminCod3r123"){
-        req.session.user = {
-            logged: true,
-            first_name: username,
-            role: "admin"
-        };
-    } else{
-        req.session.user = {
-            logged: true,
-            first_name: username,
-            role: "user"
-        };
+sessionRouter.post("/login", passport.authenticate("login", {failureRedirect:"faillogin"}), async (req, res) => {
+    if(!req.user){
+        return res.status(400).send({status:"error", error:"Invalid credentials"});
     }
-
+    console.log("req.user existe");
+    console.log(req.user);
+    req.session.user = {
+        logged: true,
+        first_name: req.user.first_name,
+        last_name: req.user.last_name,
+        age: req.user.age,
+        email: req.user.email,
+        role: "user"
+    };
 
     res.status(200).send("Success");
 })
 
+sessionRouter.get("/faillogin", async (req, res) => {
+    res.send({error: "Login failed"});
+})
 //-----------------------PERFIL---------------
 sessionRouter.get("/perfil", async (req, res) => {
     if(req.session?.user?.logged !== true ){

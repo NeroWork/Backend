@@ -9,6 +9,8 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const FileStore = require("session-file-store");
 const MongoStore = require("connect-mongo");
+const passport = require("passport");
+const { initializePassport } = require("./config/passport.config");
 
 //-----------CONFIGURAR SERVER -------------------
 const app = express();
@@ -52,6 +54,9 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 //-------------handlebars-----------------
 app.engine("handlebars", handlebars.engine());

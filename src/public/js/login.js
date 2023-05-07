@@ -9,7 +9,7 @@ form.addEventListener("submit", async (e) => {
     datosForm.forEach((value, key) => {
         object[key] = value;
     });
-    // console.log(object);
+    console.log(object);
 
     const resp = await fetch("http://localhost:8080/session/login", {
         method: "POST",
@@ -19,8 +19,12 @@ form.addEventListener("submit", async (e) => {
         body: JSON.stringify(object)
     })
     if(await resp.text() === "Success"){
+        console.log("Correcamente loggeado");
         location.href = "http://localhost:8080/views/products?limit=2"
-    };
+    } else{
+        console.log("error al logear");
+        console.log(await resp);
+    }
 })
 
 const getCookie = async () => {
