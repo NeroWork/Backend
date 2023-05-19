@@ -2,7 +2,9 @@ const {Router} = require("express");
 const { userModel } = require("../models/user.model");
 const { createHash, isValidPassword } = require("../utils/bcrypt");
 const passport = require("passport");
+const { CartManager } = require("../Dao/managerCartMongo");
 
+const cartManager = new CartManager();
 const sessionRouter = new Router()
 
 //-------------Manejo de sesiones basico----------------------
@@ -147,13 +149,22 @@ sessionRouter.post("/login", passport.authenticate("login", {failureRedirect:"fa
     }
     console.log("req.user existe");
     console.log(req.user);
+    if(req.user.cart === null){
+        const newCart = await cartManager.addCart();
+        let newCartId = newCart._id.toHexString();
+        console.log(newCartId);
+        const resp = await userModel.updateOne({email: req.user.email}, {cart: newCartId})
+        console.log(resp);
+        req.user.cart = newCartId;
+    }
     req.session.user = {
         logged: true,
         first_name: req.user.first_name,
         last_name: req.user.last_name,
         age: req.user.age,
         email: req.user.email,
-        role: "user"
+        role: req.user.role,
+        cart: req.user.cart
     };
 
     res.status(200).send("Success");
@@ -163,11 +174,11 @@ sessionRouter.get("/faillogin", async (req, res) => {
     res.send({error: "Login failed"});
 })
 //-----------------------PERFIL---------------
-sessionRouter.get("/perfil", async (req, res) => {
+sessionRouter.get("/current", async (req, res) => {
     if(req.session?.user?.logged !== true ){
         return res.render("login");
     }
-    
+    console.log(req.session.user);
     const user = await userModel.findOne({first_name: req.session.user.first_name});
     if(user){
         const userInfo = {
@@ -182,6 +193,24 @@ sessionRouter.get("/perfil", async (req, res) => {
         return res.status(500).send("Something wen't wrong!!!!");
     }
 
+})
+
+//------Github---------
+sessionRouter.get("/github", passport.authenticate("github", {scope:["user:email"]}), async (req, res) => {
+
+})
+
+sessionRouter.get("/githubcallback", passport.authenticate("github", {failureRedirect:"/login"}), async (req, res) => {
+    console.log(req.user);
+    req.session.user = {
+        logged: true,
+        first_name: req.user.first_name,
+        last_name: req.user.last_name,
+        age: req.user.age,
+        email: req.user.email,
+        role: "user"
+    };
+    res.redirect("/views/products?limit=2");
 })
 
 module.exports = {

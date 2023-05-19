@@ -2,9 +2,36 @@ const passport = require("passport");
 const local = require("passport-local");
 const { userModel } = require("../models/user.model");
 const { createHash, isValidPassword } = require("../utils/bcrypt");
+const GitHubStrategy = require("passport-github2");
 
 const LocalStrategy = local.Strategy;
 const initializePassport = () => {
+    passport.use("github", new GitHubStrategy({
+        clientID:"Iv1.8e3accf601cfcb7b",
+        clientSecret: "a288cfafbb04aded99cfbddf4a70497f51df3284",
+        callbackURL:"http://localhost:8080/session/githubcallback"
+    }, async (accessToken, refreshToken, profile, done) => {
+        try {
+            console.log(profile);
+            let user = await userModel.findOne({email: profile._json.email});
+            if(!user){
+                let newUser = {
+                    first_name: profile._json.name,
+                    last_name: "",
+                    age: 18,
+                    email: profile._json.email,
+                    password: ""
+                }
+                let result = await userModel.create(newUser);
+                return done(null, result);
+            } else {
+                return done(null, user);
+            }
+        } catch (error) {
+            return done(error);
+        }
+    }
+    ))
     passport.use("register", new LocalStrategy(
         {
             passReqToCallback: true,

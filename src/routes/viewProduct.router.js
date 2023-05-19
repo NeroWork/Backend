@@ -24,7 +24,7 @@ viewProductRouter.get("/",authSession, async (req, res) => {
     }
     //Envio los datos
     let resp = await productManager.getProducts(query, config);
-    resp = {...resp, sort: sort, query: JSON.stringify(query), user_name: req.session.user.first_name}
+    resp = {...resp, sort: sort, query: JSON.stringify(query), user_name: req.session.user.first_name, cart_id: req.session.user.cart}
     console.log(resp);
     if(resp.totalPages < page || page < 0){
         return res.send("Error page not found");

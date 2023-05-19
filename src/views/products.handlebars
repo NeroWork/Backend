@@ -1,22 +1,35 @@
 <div>
-    <div>
-    <h1>Bienvenido {{user_name}}!!</h1>
-    {{#each docs}}
-        <a href="/views/products/{{this._id}}?page={{../page}}&limit={{../limit}}"><h3>Titulo: {{this.title}}</h3></a>
-        <h4>Descripcion: {{this.description}}</h4>
-        <img src="{{this.thumbnail}}" width="200px" alt="Foto de {{this.title}}">
-        <br>
-        <button action="">Add to cart</button>
-    {{/each}}
+    <div class="d-flex flex-column align-items-center">
+        <div class="d-flex w-100 justify-content-end">
+            <a href="/views/cart/{{cart_id}}">
+                <button class="btn btn-primary mx-3">Cart</button>
+            </a>
+        </div>
+        <h1 class="m-3">Bienvenido {{user_name}}!!</h1>
+        {{#each docs}}
+            <div class="d-flex my-3 flex-column justify-content-center align-items-center border-bottom border-primary border-2 rounded-bottom">
+                <a href="/views/products/{{this._id}}?page={{../page}}&limit={{../limit}}">
+                    <h3 class="prod-title">Titulo: {{this.title}}</h3>
+                </a>
+                <h4>Descripcion: {{this.description}}</h4>
+                <img class="m-2" src="{{this.thumbnail}}" width="200px" alt="Foto de {{this.title}}">
+                <button class="btn btn-secondary m-2" onclick="addToCartThis('{{../cart_id}}','{{this._id}}')">Add to cart</button>
+            </div>
+        {{/each}}
     </div>
-    <br>
-    <br>
-    {{#if hasPrevPage}}
-    <a href="/views/products?page={{prevPage}}&limit={{limit}}&sort={{sort}}&query={{query}}"><button>prevPage</button></a>
-    {{/if}}
-    {{#if hasNextPage}}
-    <a href="/views/products?page={{nextPage}}&limit={{limit}}&sort={{sort}}&query={{query}}"><button onclick="">nextPage</button></a>
-    {{/if}}
+
+    <div class="d-flex justify-content-center my-3">
+        {{#if hasPrevPage}}
+        <div class="m-0 d-flex justify-content-start">
+            <a href="/views/products?page={{prevPage}}&limit={{limit}}&sort={{sort}}&query={{query}}"><button class="btn btn-secondary m-2">prevPage</button></a>
+        </div>
+        {{/if}}
+        {{#if hasNextPage}}
+        <div class="m-0 d-flex justify-content-end">
+            <a href="/views/products?page={{nextPage}}&limit={{limit}}&sort={{sort}}&query={{query}}"><button class="btn btn-secondary m-2">nextPage</button></a>
+        </div>
+        {{/if}}
+    </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>

@@ -14,15 +14,23 @@ const userSchema = new Schema({
     },
     email:{
         type: String,
-        require: true
+        require: true,
+        unique: true
     },
     age:{
-        type: Number,
-        require: true
+        type: Number
     },
     password: {
         type: String,
         require: true
+    },
+    cart: {
+        type: String,
+        default: null
+    },
+    role: {
+        type: String,
+        default: "user"
     }
 })
 

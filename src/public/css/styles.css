@@ -1,0 +1,12 @@
+a:visited{
+    color: white;
+    text-decoration: none;
+}
+a{
+    text-decoration: none;
+    color: white;
+}
+
+.prod-title{
+    color: black;
+}
