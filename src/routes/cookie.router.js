@@ -4,7 +4,7 @@ const cookieRouter = new Router();
 
 //-----------UnSigned---------------------
 cookieRouter.get("/set", (req, res) => {
-    res.cookie("CoderCookie", "Esta es una cookie", {maxAge: 500000}).send("Cookie enviada");
+    res.cookie("CoderCookie2", "Esta es una cookie", {maxAge: 500000}).send("Cookie enviada");
 })
 
 cookieRouter.get("/get", (req, res) => {

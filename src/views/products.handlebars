@@ -5,7 +5,7 @@
                 <button class="btn btn-primary mx-3">Cart</button>
             </a>
         </div>
-        <h1 class="m-3">Bienvenido {{user_name}}!!</h1>
+        <h1 class="m-3">Welcome {{role}} {{user_name}}!!</h1>
         {{#each docs}}
             <div class="d-flex my-3 flex-column justify-content-center align-items-center border-bottom border-primary border-2 rounded-bottom">
                 <a href="/views/products/{{this._id}}?page={{../page}}&limit={{../limit}}">
@@ -13,7 +13,9 @@
                 </a>
                 <h4>Descripcion: {{this.description}}</h4>
                 <img class="m-2" src="{{this.thumbnail}}" width="200px" alt="Foto de {{this.title}}">
-                <button class="btn btn-secondary m-2" onclick="addToCartThis('{{../cart_id}}','{{this._id}}')">Add to cart</button>
+                {{#ifEquals ../role "user"}}
+                    <button class="btn btn-secondary m-2" onclick="addToCartThis('{{../cart_id}}','{{this._id}}')">Add to cart</button>
+                {{/ifEquals}}
             </div>
         {{/each}}
     </div>
