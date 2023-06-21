@@ -1,8 +1,8 @@
 const {Router} = require("express");
-const { ProductManagerMongo } = require("../Dao/managerProductMongo");
-const { authSession } = require("../middleware/auth.middleware");
+const { authSession, authRoleJWT } = require("../middleware/auth.middleware");
+const { ProductRepository } = require("../repository/product.repository");
 
-const productManager = new ProductManagerMongo();
+const productRepository = new ProductRepository();
 
 const productRouter = Router();
 
@@ -24,7 +24,7 @@ productRouter.get("/",authSession, async (req, res) => {
         config = {limit, page, lean: true};
     }
     //Envio los datos
-    const data = await productManager.getProducts(query, config);
+    const data = await productRepository.getAllProducts(query, config);
     let resp = {};
     if(data.docs){
         resp = {
@@ -59,29 +59,29 @@ productRouter.get("/:pid", async (req, res) => {
     if(idAux === undefined){
         return res.status(400).send({status:"error", error:"Invalid data"});
     }
-    const resp = await productManager.getProductById(idAux);
+    const resp = await productRepository.findProductById(idAux);
     res.send(resp);
 })
-productRouter.post("/", async (req, res) => {
+productRouter.post("/", authRoleJWT("admin"), async (req, res) => {         //Only admin can do this
     const newProduct = req.body;
-    const resp = await productManager.addProduct(newProduct);
+    const resp = await productRepository.addProduct(newProduct);
     res.send(resp);
 })
-productRouter.put("/:pid", async (req, res) => {
+productRouter.put("/:pid", authRoleJWT("admin"), async (req, res) => {         //Only admin can do this
     const update = req.body;
     const idAux = req.params.pid;
     if(idAux === undefined){
         return res.status(400).send({status:"error", error:"Invalid data"});
     }
-    const resp = await productManager.updateProduct(idAux, update);
+    const resp = await productRepository.updateProduct(idAux, update);
     res.send(resp);
 })
-productRouter.delete("/:pid", async (req, res) => {
+productRouter.delete("/:pid", authRoleJWT("admin"), async (req, res) => {         //Only admin can do this
     const idAux = req.params.pid;
     if(idAux === undefined){
         return res.status(400).send({status:"error", error:"Invalid data"});
     }
-    const resp = await productManager.deleteProduct(idAux);
+    const resp = await productRepository.deleteProduct(idAux);
     res.send(resp);
 })
 

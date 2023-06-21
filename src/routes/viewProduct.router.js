@@ -1,11 +1,12 @@
 const {Router} = require("express");
-const { ProductManagerMongo } = require("../Dao/managerProductMongo");
 const { authSession } = require("../middleware/auth.middleware");
+const passport = require("passport");
+const { ProductRepository } = require("../repository/product.repository");
 
-const productManager = new ProductManagerMongo();
+const productRepository = new ProductRepository();
 const viewProductRouter = Router();
 
-viewProductRouter.get("/",authSession, async (req, res) => {
+viewProductRouter.get("/", passport.authenticate("jwt", {session:false}), async (req, res) => {
     //Traigo los params y defino valores por defecto
     const {limit=10, page=1, sort = null} = req.query;
     let {query = null} = req.query;
@@ -23,8 +24,8 @@ viewProductRouter.get("/",authSession, async (req, res) => {
         config = {limit, page, lean: true};
     }
     //Envio los datos
-    let resp = await productManager.getProducts(query, config);
-    resp = {...resp, sort: sort, query: JSON.stringify(query), user_name: req.session.user.first_name, cart_id: req.session.user.cart}
+    let resp = await productRepository.getAllProducts(query, config);
+    resp = {...resp, sort: sort, query: JSON.stringify(query), user_name: req.user.first_name, cart_id: req.user.cart, role: req.user.role}
     console.log(resp);
     if(resp.totalPages < page || page < 0){
         return res.send("Error page not found");
@@ -32,15 +33,16 @@ viewProductRouter.get("/",authSession, async (req, res) => {
     res.render("products",resp)
 })
 
-viewProductRouter.get("/:pid",authSession, async (req, res) => {
+viewProductRouter.get("/:pid", passport.authenticate("jwt", {session:false}), async (req, res) => {
     try {
         const {limit = 10, page = 1 } = req.query;
         const pid = req.params.pid;
-        const prod = await productManager.getProductById(pid);
+        const prod = await productRepository.findProductById(pid);
         res.render("oneProduct", {
             limit,
             page,
-            prod
+            prod,
+            role: req.user.role
         })
     } catch (error) {
         res.render("error")

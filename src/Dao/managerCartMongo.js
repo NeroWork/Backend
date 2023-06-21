@@ -33,7 +33,7 @@ class CartManager {
     async updateCartArray(cid, update){
         let arrayAux = [];
         update.payload.forEach(element => {
-            arrayAux = [...arrayAux, {product: element._id, quantity: 1}];
+            arrayAux = [...arrayAux, {product: element.product, quantity: element.quantity}];
         });
         return await cartModel.updateOne({_id:cid}, {products: arrayAux});
     }

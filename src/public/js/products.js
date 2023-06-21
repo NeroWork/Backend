@@ -1,6 +1,7 @@
 const socket = io();
 console.log("Llega al products.js");
 
+
 const addToCartThis = async (cartId, prodId) => {
     // console.log("ADTOCARTTHIS")
     console.log(cartId);

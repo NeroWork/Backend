@@ -1,14 +1,12 @@
 const express = require("express");
 const { router } = require("./routes");
 const handlebars = require("express-handlebars");
+const cors = require("cors");
 const { configObj } = require("./config/config");
 const {Server} = require("socket.io");
-const { ProductManagerMongo } = require("./Dao/managerProductMongo");
-const { ChatManagerMongo } = require("./Dao/managerChatMongo");
+const { ProductManagerMongo } = require("./dao/managerProductMongo");
+const { ChatManagerMongo } = require("./dao/managerChatMongo");
 const cookieParser = require("cookie-parser");
-const session = require("express-session");
-const FileStore = require("session-file-store");
-const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const { initializePassport } = require("./config/passport.config");
 
@@ -23,45 +21,26 @@ configObj.connectDB();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use("/static", express.static(__dirname+"/public"));
+
 //----------------------Cookies------------------------
 app.use(cookieParser("sercretoIncreiblementeSeguro"));
-//_--------------------Session--------------------------
-const fileStorage = FileStore(session);
 
-// ---- file storage server --------
-// app.use(session({
-//     store: new fileStorage({
-//         ttl: 100000,
-//         retires: 0,
-//         path: __dirname+"/sessionFiles"
-//     }),
-//     secret: "sercretoIncreiblementeSeguro",
-//     resave: true,
-//     saveUninitialized: true
-// }));
+//----------------------Cors------------------------
+app.use(cors());
 
-//---------mongo server------------
-app.use(session({
-    store: MongoStore.create({
-        mongoUrl: configObj.url,
-        mongoOptions: {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        },
-        ttl: 10000
-    }),
-    secret: "sercretoIncreiblementeSeguro",
-    resave: true,
-    saveUninitialized: true
-}));
+//-----------------------Passport----------------------
 initializePassport();
 app.use(passport.initialize());
-app.use(passport.session());
 
 //-------------handlebars-----------------
 app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname+"/views");
 app.set("view engine", "handlebars");
+var Handlebars = handlebars.create({});
+Handlebars.handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+});
+
 //------------ROUTERS--------------
 app.use(router);
 

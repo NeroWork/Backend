@@ -7,5 +7,7 @@
     <img class="my-3" src="{{prod.thumbnail}}" width="200px" alt="Imagen de {{title}}">
     <h3>Precio: {{prod.price}}</h3>
     <h3>Stock: {{prod.stock}}</h3>
-    <button class="btn btn-secondary my-3">add to cart</button>
+    {{#ifEquals role "user"}}
+        <button class="btn btn-secondary my-3">add to cart</button>
+    {{/ifEquals}}
 </div>
