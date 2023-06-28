@@ -2,7 +2,7 @@ console.log("JS ACTIVO")
 
 const postCompra = async (id) => {
     console.log(id);
-    const resp = await fetch(`http://localhost:8080/views/cart/${id}/purchase`, {
+    const resp = await fetch(`http://localhost:8080/api/carrito/${id}/purchase`, {
         method: "GET"
     })
     console.log("done");
