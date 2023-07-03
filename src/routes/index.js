@@ -10,9 +10,11 @@ const { cookieRouter } = require("./cookie.router.js");
 const { sessionRouter } = require("./session.router.js");
 const { userRouter } = require("./user.router.js");
 const { mockRouter } = require("./mock.router.js");
+const { loggerRouter } = require("./logger.router.js");
 
 const router = Router();
 
+router.use("/logger", loggerRouter);
 router.use("/api/carrito", cartRouter);
 router.use("/api/producto", productRouter);
 router.use("/realTimeProducts", realtimeRouter);

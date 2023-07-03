@@ -9,10 +9,12 @@ const { ChatManagerMongo } = require("./dao/managerChatMongo");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const { initializePassport } = require("./config/passport.config");
+const { addLogger } = require("./utils/logger");
+const { dotenvParams } = require("./config/dotenv");
 
 //-----------CONFIGURAR SERVER -------------------
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = dotenvParams.port || 8080;
 
 //----------------DB CONFIG---------------------------
 configObj.connectDB();
@@ -27,6 +29,8 @@ app.use(cookieParser("sercretoIncreiblementeSeguro"));
 
 //----------------------Cors------------------------
 app.use(cors());
+//----------------------Logger-----------------------
+app.use(addLogger);
 
 //-----------------------Passport----------------------
 initializePassport();
@@ -43,7 +47,6 @@ Handlebars.handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
 
 //------------ROUTERS--------------
 app.use(router);
-
 //--------------LISTEN---------------
 const httpServer = app.listen(PORT, error => {
     if(error){
