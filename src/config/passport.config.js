@@ -21,11 +21,30 @@ const cookieExtractor = (req) => {
     }
     return token;
 }
+const cookiePassResetExtractor = (req) => {
+    let token = null;
+    if(req && req.cookies){
+        token = req.cookies["TimerPasswordReset"];
+    }
+    return token;
+}
 
 //-------Main code-----------------------------
 const initializePassport = () => {
     passport.use("jwt", new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+        secretOrKey: "sercretoIncreiblementeSeguro"
+    }, async (jwt_payload, done) => {
+        try {
+            return done(null,jwt_payload);
+        } catch (error) {
+            return done(error);
+        }
+    }
+    ))
+    
+    passport.use("token_Password_Reset", new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromExtractors([cookiePassResetExtractor]),
         secretOrKey: "sercretoIncreiblementeSeguro"
     }, async (jwt_payload, done) => {
         try {

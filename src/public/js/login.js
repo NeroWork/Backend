@@ -1,4 +1,5 @@
 const form = document.querySelector("#cookieForm");
+const reset_pass_button = document.getElementById("reset_pass_button");
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -33,3 +34,19 @@ const getCookie = async () => {
     });
     console.log( await resp.json());
 }
+
+
+reset_pass_button.addEventListener("click", async (evt) => {
+    evt.preventDefault();
+    console.log("funcion recu_pass");
+    let id_email_recu = document.getElementById("email_recu");
+    let email_recu = id_email_recu.value;
+
+    const resp = await fetch(`http://localhost:8080/mail/${email_recu}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    window.location.replace("http://localhost:8080/session/render"); 
+})

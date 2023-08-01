@@ -19,6 +19,19 @@
         <button class="btn btn-secondary m-1" onclick="getCookie()">getCookie</button>
         <a href="/session/github"><button class="btn btn-secondary m-1">Entrar con Github</button></a>
     </div>
+
+    <form class="d-flex justify-content-center flex-column w-50 my-5" action="">
+        <div class="d-flex justify-content-center my-2">
+            <h1>¿Has olvidado tu contraseña?</h1>
+        </div>
+        <div>
+            <label class="form-label" for="email-recu">Email de Recuperacion:</label>
+            <input class="form-control" type="text" id="email_recu">
+        </div>
+        <div class="d-flex justify-content-end">
+            <input type="button" class="btn btn-secondary m-1" value="Recuperar" id="reset_pass_button">
+        </div>
+    </form>
 </div>
 
 <script src="../static/js/login.js"></script>

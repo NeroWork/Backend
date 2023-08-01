@@ -11,11 +11,15 @@ const { sessionRouter } = require("./session.router.js");
 const { userRouter } = require("./user.router.js");
 const { mockRouter } = require("./mock.router.js");
 const { loggerRouter } = require("./logger.router.js");
+const { mailingRouter } = require("./mailing.router.js");
+const { passResetRouter } = require("./passwordReset.router.js");
 
 const router = Router();
 
 router.use("/logger", loggerRouter);
+router.use("/mail", mailingRouter);
 router.use("/api/carrito", cartRouter);
+router.use("/api/resPass", passResetRouter);
 router.use("/api/producto", productRouter);
 router.use("/realTimeProducts", realtimeRouter);
 router.use("/session", sessionRouter);

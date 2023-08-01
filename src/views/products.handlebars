@@ -7,15 +7,34 @@
         </div>
         <h1 class="m-3">Welcome {{role}} {{user_name}}!!</h1>
         {{#each docs}}
-            <div class="d-flex my-3 flex-column justify-content-center align-items-center border-bottom border-primary border-2 rounded-bottom">
+            <div id="prod-container" class="d-flex my-3 mx-5 flex-column justify-content-center align-items-center border-bottom border-primary border-2 rounded-bottom">
                 <a href="/views/products/{{this._id}}?page={{../page}}&limit={{../limit}}">
                     <h3 class="prod-title">Titulo: {{this.title}}</h3>
                 </a>
-                <h4>Descripcion: {{this.description}}</h4>
-                <img class="m-2" src="{{this.thumbnail}}" width="200px" alt="Foto de {{this.title}}">
+                <div class="d-flex align-items-center w-50">
+                    <h4>Descripcion: {{this.description}}</h4>
+                </div>
+                <img class="m-2" src="{{this.thumbnail}}" width="200px" alt="Image of {{this.title}}">
+                {{#ifEquals ../role "user"}}
+                    <button class="btn btn-secondary m-2" onclick="addToCartThis('{{../cart_id}}','{{this._id}}')">Add to cart</button>
+                {{else ifEquals ../role "premium"}}
+                    {{#ifEquals ../email this.owner}}
+                    {{else}}
+                        <button class="btn btn-secondary m-2" onclick="addToCartThis('{{../cart_id}}','{{this._id}}')">Add to cart</button>
+                    {{/ifEquals}}
+                {{/ifEquals}}
+
+
+
+
+
+{{!-- 
                 {{#ifEquals ../role "user"}}
                     <button class="btn btn-secondary m-2" onclick="addToCartThis('{{../cart_id}}','{{this._id}}')">Add to cart</button>
                 {{/ifEquals}}
+                {{#ifEquals ../role "premium"}}
+                    <button class="btn btn-secondary m-2" onclick="addToCartThis('{{../cart_id}}','{{this._id}}')">Add to cart</button>
+                {{/ifEquals}} --}}
             </div>
         {{/each}}
     </div>

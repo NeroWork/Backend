@@ -3,11 +3,21 @@
         <button class="btn btn-secondary mb-3">Volver</button>
     </a>
     <h2>{{prod.title}}</h2>
-    <h3>{{prod.description}}</h3>
+    <div class="d-flex align-items-center w-50">
+        <h3>{{prod.description}}</h3>
+    </div>
     <img class="my-3" src="{{prod.thumbnail}}" width="200px" alt="Imagen de {{title}}">
     <h3>Precio: {{prod.price}}</h3>
     <h3>Stock: {{prod.stock}}</h3>
-    {{#ifEquals role "user"}}
-        <button class="btn btn-secondary my-3">add to cart</button>
-    {{/ifEquals}}
+    <h3>Owner: {{prod.owner}}</h3>
+    {{#if showBuyButton}}
+        <button class="btn btn-secondary my-3" onclick="addToCartThis('{{cart_id}}','{{prod._id}}')">add to cart</button>
+    {{/if}}
+    {{#if showDeleteButton}}
+        <div class="m-0 d-flex justify-content-start">
+            <button class="btn btn-secondary my-3" onclick="deleteProduct('{{prod._id}}')">Delete Product</button>
+        </div>
+    {{/if}}
 </div>
+
+<script src="../../static/js/oneProduct.js"></script>
