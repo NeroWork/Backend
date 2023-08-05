@@ -11,6 +11,9 @@ const passport = require("passport");
 const { initializePassport } = require("./config/passport.config");
 const { addLogger } = require("./utils/logger");
 const { dotenvParams } = require("./config/dotenv");
+const swaggerJSDoc = require("swagger-jsdoc");
+const { swaggerOptions } = require("./config/swagger");
+const swaggerUiExpress = require("swagger-ui-express");
 
 //-----------CONFIGURAR SERVER -------------------
 const app = express();
@@ -47,6 +50,11 @@ Handlebars.handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
 
 //------------ROUTERS--------------
 app.use(router);
+
+//-------------SWAGGER----------------
+const specs = swaggerJSDoc(swaggerOptions);
+app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
+
 //--------------LISTEN---------------
 const httpServer = app.listen(PORT, error => {
     if(error){

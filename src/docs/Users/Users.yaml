@@ -1,0 +1,187 @@
+paths:
+  api/usuarios/confirmUser/{mail}:
+    get:
+      summary: Confirms that the user with the given email exists and returns it
+      tags:
+        - Users
+      parameters:
+        - name: mail
+          in: path
+          required: true
+          description: Email of the desired user
+          schema:
+            $type: String
+      responses:
+        "200":
+          description: It succesfully found the user and returned it
+        "400":
+          description: Something failed
+  api/usuarios/isValidPassword/{mail}/{pass}:
+    get:
+      summary: returns a boolean indicating if the password is valid
+      tags:
+        - Users
+      parameters:
+        - name: mail
+          in: path
+          required: true
+          description: Email of the desired user
+          schema:
+            $type: String
+        - name: pass
+          in: path
+          required: true
+          description: Password to verify
+          schema:
+            $type: String
+      responses:
+        "200":
+          description: It succesfully returned the boolean
+  api/usuarios/hashpassword/{pass}:
+    get:
+      summary: It recives a password and returns a hashed version
+      tags:
+        - Users
+      parameters:
+        - name: pass
+          in: path
+          required: true
+          description: Password to hash
+          schema:
+            $type: String
+      responses:
+        "200":
+          description: It succesfully returned the hashed password
+  api/usuarios/updateUser/{user}:
+    put:
+      summary: Updates the data of a given user by email
+      tags:
+        - Users
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: Email of the user to update
+          schema:
+            $type: String
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requistBodies/updateUser"
+      responses:
+        "200":
+          description: It succesfully updated the user
+  api/usuarios/update/{uid}:
+    put:
+      summary: Updates the data of a given user by _id
+      tags:
+        - Users
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: _id of the user to update
+          schema:
+            $type: String
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requistBodies/updateUser"
+      responses:
+        "200":
+          description: It succesfully updated the user
+  api/usuarios/premium/{uid}:
+    get:
+      summary: It renders the <changeRol> page with the given user id
+      tags:
+        - Users
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: _id of the user to send to change Rol
+          schema:
+            $type: String
+
+      
+
+components:
+  schemas:
+    User:
+      type: Object
+      properties:
+        _id:
+          type: ObjectId
+          description: Auto id of mongoDB
+        first_name:
+          type: String
+          description: First name of the user
+        last_name:
+          type: String
+          description: Last name of the user
+        email:
+          type: String
+          description: Email of the user
+        age:
+          type: Number
+          description: Age of the user
+        password:
+          type: String
+          description: Password of the user
+        cart:
+          type: String
+          description: Id of the cart that belongs to the user
+        role:
+          type: String
+          description: Role of the user
+      example:
+        - _id: ObjectId(312312df1gu1y2g3)
+          fist_name: San
+          last_name: Martin
+          email: libertad@gmail.com
+          age: 40
+          password: randomPassword
+          cart: 312b3u12b3u1b
+          role: admin
+  requestBodies:
+    updateUser:
+      type: Object
+      properties:
+        _id:
+          type: ObjectId
+          description: Auto id of mongoDB
+        first_name:
+          type: String
+          description: First name of the user
+        last_name:
+          type: String
+          description: Last name of the user
+        email:
+          type: String
+          description: Email of the user
+        age:
+          type: Number
+          description: Age of the user
+        password:
+          type: String
+          description: Password of the user
+        cart:
+          type: String
+          description: Id of the cart that belongs to the user
+        role:
+          type: String
+          description: Role of the user
+      example:
+        - _id: ObjectId(312312df1gu1y2g3)
+          fist_name: San
+          last_name: Martin
+          email: libertad@gmail.com
+          age: 40
+          password: randomPassword
+          cart: 312b3u12b3u1b
+          role: admin
+

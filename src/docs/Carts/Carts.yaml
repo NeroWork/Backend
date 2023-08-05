@@ -1,0 +1,225 @@
+paths:
+  /api/carrito/:
+    post:
+      summary: Creates a new cart. A custom cart can be introduced via req.body; if not, it would be created empty with default values
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Cart succesfully created
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requistBodies/cartBody"
+  /api/carrito/{cid}:
+    get:
+      summary: It returns a cart with the id provided
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id of the desired cart
+          schema:
+            $type: Number
+      responses:
+        "200":
+          description: Cart succesfully returned
+        "400":
+          description: There was some error with the param or the search
+    put:
+      summary: It updates the cart with the id provided
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id of the desired cart
+          schema:
+            $type: Number
+      responses:
+        "200":
+          description: Cart succesfully updated
+    delete:
+      summary: It empties the cart with the id provided
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id of the desired cart
+          schema:
+            $type: Number
+      responses:
+        "200":
+          description: Cart succesfully emptied
+  /api/carrito/{cid}/purchase:
+    get:
+      summary: It makes the process of buying of the cart
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id of the desired cart
+          schema:
+            $type: Number
+      responses:
+        "200":
+          description: The cart was succesfully bought
+        "400":
+          description: Something wen't wrong
+  /api/carrito/{cid}/products/{pid}:
+    post:
+      summary: It adds a product to a cart
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id of the desired cart
+          schema:
+            $type: Number
+        - name: pid
+          in: path
+          required: true
+          description: Id of the desired product
+          schema:
+            $type: Number
+      responses:
+        "200":
+          description: Product succesfully added to the cart
+    delete:
+      summary: It deletes a product of a cart
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id of the desired cart
+          schema:
+            $type: Number
+        - name: pid
+          in: path
+          required: true
+          description: Id of the desired product
+          schema:
+            $type: Number
+      responses:
+        "200":
+          description: Product succesfully deleted of the cart
+    put:
+      summary: It updates the quantity of a product in a cart
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id of the desired cart
+          schema:
+            $type: Number
+        - name: pid
+          in: path
+          required: true
+          description: Id of the desired product
+          schema:
+            $type: Number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requistBodies/quantity"
+      responses:
+        "200":
+          description: Product succesfully deleted of the cart
+      
+
+
+components:
+  schemas:
+    Cart:
+      type: Object
+      properties:
+        _id:
+          type: ObjectId
+          description: Auto Id of MongoDB
+        products:
+          type: Array
+          items: 
+            type: Object
+            properties:
+              $ref: "#/components/schemas/Products"
+              quantity:
+                type: Integer
+                description: The quantity that the user is buying of this product
+          description: The list of products that the user is about to buy
+      example:
+        - product:
+            _id: ObjectId(312d123123nh)
+            title: Banana
+            description: Yellow fruit
+            thumbnail: randomlink.com
+            price: $3
+            stock: 4
+            owner: admin
+          quantity: 32
+        - product:
+            _id: ObjectId(3123j1u3u13h)
+            title: Aple
+            description: Red fruit
+            thumbnail: randomlink.com
+            price: $4
+            stock: 3
+            owner: jose@gmail.com
+          quantity: 12
+  requestBodies:
+    quantity:
+      type: Number
+      example: 2
+    cartBody:
+      type: Object
+      properties:
+        _id:
+          type: ObjectId
+          description: Auto Id of MongoDB
+        products:
+          type: Array
+          items: 
+            type: Object
+            properties:
+              $ref: "#/components/schemas/Products"
+              quantity:
+                type: Integer
+                description: The quantity that the user is buying of this product
+          description: The list of products that the user is about to buy
+      example:
+        - product:
+            _id: ObjectId(312d123123nh)
+            title: Banana
+            description: Yellow fruit
+            thumbnail: randomlink.com
+            price: $3
+            stock: 4
+            owner: admin
+          quantity: 32
+        - product:
+            _id: ObjectId(3123j1u3u13h)
+            title: Aple
+            description: Red fruit
+            thumbnail: randomlink.com
+            price: $4
+            stock: 3
+            owner: jose@gmail.com
+          quantity: 12
+
+

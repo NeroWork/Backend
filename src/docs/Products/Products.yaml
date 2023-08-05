@@ -1,0 +1,176 @@
+paths:
+  /api/producto/:
+    get:
+      summary: It returns all the products available
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Products succesfully returned
+    post:
+      summary: It creates a new products
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requistBodies/newProduct"
+      responses:
+        "200":
+          description: Product succesfully created
+  /api/producto/{pid}:
+    get:
+      summary: It returns the products with the provided id
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Id of the desired product
+          schema:
+            $type: Number
+      responses:
+        "200":
+          description: Product succesfully returned
+        "400":
+          description: Invalid data
+    put:
+      summary: It updates a product with the provided id
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Id of the desired product
+          schema:
+            $type: Number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requistBodies/updateProduct"
+      responses:
+        "200":
+          description: Product succesfully returned
+        "400":
+          description: Invalid Data
+    delete:
+      summary: It deletes a product with the provided id
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Id of the desired product
+          schema:
+            $type: Number
+      responses:
+        "200":
+          description: Product succesfully returned
+
+components:
+  schemas:
+    Product:
+      type: Object
+      properties:
+        _id:
+          type: ObjectId
+          description: Auto Id of MongoDB
+        title:
+          type: String
+          description: Title of the product
+        description:
+          type: String
+          description: Description of the product
+        thumbnail:
+          type: String
+          description: Link to the image of the product
+        price:
+          type: Integer
+          description: Price of the product
+        stock:
+          type: Integer
+          description: Remaining stock of the product
+        owner:
+          type: String
+          description: Identifier of the creator of the product
+      example:
+        _id: ObjectId("31231gh23yg1u2y3g")
+        title: Aple
+        description: Red Fruit
+        thumbnail: randomlink.com
+        price: $31
+        stock: 1
+        owner: admin
+  requestBodies:
+    newProduct:
+      type: Object
+      properties:
+        _id:
+          type: ObjectId
+          description: Auto Id of MongoDB
+        title:
+          type: String
+          description: Title of the product
+        description:
+          type: String
+          description: Description of the product
+        thumbnail:
+          type: String
+          description: Link to the image of the product
+        price:
+          type: Integer
+          description: Price of the product
+        stock:
+          type: Integer
+          description: Remaining stock of the product
+        owner:
+          type: String
+          description: Identifier of the creator of the product
+      example:
+        _id: ObjectId("31231gh23yg1u2y3g")
+        title: Aple
+        description: Red Fruit
+        thumbnail: randomlink.com
+        price: $31
+        stock: 1
+        owner: admin
+    updateProduct:
+      type: Object
+      properties:
+        _id:
+          type: ObjectId
+          description: Auto Id of MongoDB
+        title:
+          type: String
+          description: Title of the product
+        description:
+          type: String
+          description: Description of the product
+        thumbnail:
+          type: String
+          description: Link to the image of the product
+        price:
+          type: Integer
+          description: Price of the product
+        stock:
+          type: Integer
+          description: Remaining stock of the product
+        owner:
+          type: String
+          description: Identifier of the creator of the product
+      example:
+        _id: ObjectId("31231gh23yg1u2y3g")
+        title: Aple
+        description: Red Fruit
+        thumbnail: randomlink.com
+        price: $31
+        stock: 1
+        owner: admin
+

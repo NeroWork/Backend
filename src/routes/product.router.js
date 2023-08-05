@@ -55,7 +55,7 @@ productRouter.get("/", async (req, res) => {
     // res.send(resp);
 
     let prod = await productRepository.getAllProducts();
-    res.send(prod);
+    res.status(200).send(prod);
 })
 productRouter.get("/:pid", async (req, res) => {
     const idAux = req.params.pid;
@@ -63,12 +63,12 @@ productRouter.get("/:pid", async (req, res) => {
         return res.status(400).send({status:"error", error:"Invalid data"});
     }
     const resp = await productRepository.findProductById(idAux);
-    res.send(resp);
+    res.status(200).send(resp);
 })
 productRouter.post("/", async (req, res) => {
     const newProduct = req.body;
     const resp = await productRepository.addProduct(newProduct);
-    res.send(resp);
+    res.status(200).send(resp);
 })
 productRouter.put("/:pid", async (req, res) => {
     const update = req.body;
@@ -77,7 +77,7 @@ productRouter.put("/:pid", async (req, res) => {
         return res.status(400).send({status:"error", error:"Invalid data"});
     }
     const resp = await productRepository.updateProduct(idAux, update);
-    res.send(resp);
+    res.status(200).send(resp);
 })
 productRouter.delete("/:pid", async (req, res) => {
     const idAux = req.params.pid;
@@ -85,7 +85,7 @@ productRouter.delete("/:pid", async (req, res) => {
         return res.status(400).send({status:"error", error:"Invalid data"});
     }
     const resp = await productRepository.deleteProduct(idAux);
-    res.send(resp);
+    res.status(200).send(resp);
 })
 
 module.exports = {
