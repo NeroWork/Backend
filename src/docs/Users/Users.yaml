@@ -69,7 +69,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#components/requistBodies/updateUser"
+              $ref: "#components/requestBodies/updateUser"
       responses:
         "200":
           description: It succesfully updated the user
@@ -90,7 +90,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#components/requistBodies/updateUser"
+              $ref: "#components/requestBodies/updateUser"
       responses:
         "200":
           description: It succesfully updated the user
