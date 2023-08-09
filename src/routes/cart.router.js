@@ -18,14 +18,6 @@ cartRouter.post("/", async (req, res) => {
 cartRouter.get("/:cid", errorHandler, async (req, res) => {
     try {        
         const cid = req.params.cid;
-        if(typeof(cid) !== "number"){
-            CustomError.createError({
-                name:"Get cart by id error",
-                cause: generateInvalidParamInfo(cid),
-                message: "Error trying to get a cart",
-                code: EErrors.INVALID_PARAMS
-            })
-        }
         const resp = await cartRepository.findCartById(cid);
         res.status(200).send(resp);
     } catch (error) {
@@ -80,7 +72,8 @@ cartRouter.get("/:cid/purchase", passport.authenticate("jwt", {session: false}),
         console.log(newCart);
         res.status(200).send(productosNoDisponibles);
     } catch (error) {
-        console.status(400).log(error);
+        console.log(error)
+        res.status(400).send(error);
     }
 })
 

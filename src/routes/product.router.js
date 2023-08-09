@@ -58,12 +58,16 @@ productRouter.get("/", async (req, res) => {
     res.status(200).send(prod);
 })
 productRouter.get("/:pid", async (req, res) => {
-    const idAux = req.params.pid;
-    if(idAux === undefined){
+    try {
+        const idAux = req.params.pid;
+        if(idAux === undefined){
+            return res.status(400).send({status:"error", error:"Invalid data"});
+        }
+        const resp = await productRepository.findProductById(idAux);
+        res.status(200).send(resp);
+    } catch (error) {
         return res.status(400).send({status:"error", error:"Invalid data"});
     }
-    const resp = await productRepository.findProductById(idAux);
-    res.status(200).send(resp);
 })
 productRouter.post("/", async (req, res) => {
     const newProduct = req.body;
@@ -71,21 +75,29 @@ productRouter.post("/", async (req, res) => {
     res.status(200).send(resp);
 })
 productRouter.put("/:pid", async (req, res) => {
-    const update = req.body;
-    const idAux = req.params.pid;
-    if(idAux === undefined){
+    try {        
+        const update = req.body;
+        const idAux = req.params.pid;
+        if(idAux === undefined){
+            return res.status(400).send({status:"error", error:"Invalid data"});
+        }
+        const resp = await productRepository.updateProduct(idAux, update);
+        res.status(200).send(resp);
+    } catch (error) {
         return res.status(400).send({status:"error", error:"Invalid data"});
     }
-    const resp = await productRepository.updateProduct(idAux, update);
-    res.status(200).send(resp);
 })
 productRouter.delete("/:pid", async (req, res) => {
-    const idAux = req.params.pid;
-    if(idAux === undefined){
+    try {        
+        const idAux = req.params.pid;
+        if(idAux === undefined){
+            return res.status(400).send({status:"error", error:"Invalid data"});
+        }
+        const resp = await productRepository.deleteProduct(idAux);
+        res.status(200).send(resp);
+    } catch (error) {
         return res.status(400).send({status:"error", error:"Invalid data"});
     }
-    const resp = await productRepository.deleteProduct(idAux);
-    res.status(200).send(resp);
 })
 
 module.exports = {

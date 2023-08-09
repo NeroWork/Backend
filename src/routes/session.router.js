@@ -18,7 +18,7 @@ sessionRouter.get("/", (req, res) => {
 })
 sessionRouter.get("/logout", (req, res) => {
     //-----------USANDO JWT----------
-    res.clearCookie("coderCookieToken").redirect("/session/render");
+    res.status(200).clearCookie("coderCookieToken").redirect("/session/render");
 })
 
 sessionRouter.get("/render", passport.authenticate("jwt", {session: false, failureRedirect: "/session/login", successRedirect:"../views/products"}), async  (req, res) => {
@@ -37,7 +37,7 @@ sessionRouter.get("/registerRender", async (req, res) => {
 })
 
 //------------------Register con Passport-------------------
-sessionRouter.post("/register",passport.authenticate("register",{failureRedirect: "/session/failregister"}), async (req, res) => {
+sessionRouter.post("/register",passport.authenticate("register",{session: false, failureRedirect: "/session/failregister"}), async (req, res) => {
     res.redirect("/views/products?limit=2");
 })
 
@@ -84,7 +84,7 @@ sessionRouter.get("/current", passport.authenticate("jwt", {session: false}), as
     const user = await userRepository.findUser({first_name: req.user.first_name});
     if(user){
         const userInfo = new UserDTO(user); //-------DTO---------
-        return res.render("perfil", userInfo);
+        return res.status(200).render("perfil", userInfo);
     } else{
         return res.status(500).send("Something went wrong!!!!");
     }
