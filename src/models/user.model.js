@@ -31,6 +31,22 @@ const userSchema = new Schema({
     role: {
         type: String,
         default: "user"
+    },
+    documents: {
+        type: [
+            {
+                name: {
+                    type: String
+                },
+                reference: {
+                    type: String
+                }
+            }
+        ]
+    },
+    last_connection: {
+        type: Date,
+        default: null
     }
 })
 

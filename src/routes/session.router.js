@@ -16,9 +16,18 @@ const userRepository = new UserRepository();
 sessionRouter.get("/", (req, res) => {
     res.send("Antes trabaja con sesiones :O")
 })
-sessionRouter.get("/logout", (req, res) => {
-    //-----------USANDO JWT----------
-    res.status(200).clearCookie("coderCookieToken").redirect("/session/render");
+sessionRouter.get("/logout", passport.authenticate("jwt", {session: false, failureRedirect: "/session/login"}), async (req, res) => {
+    try {
+        //Update last connection for user
+        if(req.user){
+            let date = new Date()
+            const resp = await userRepository.updateUser({email: req.user.email}, {last_connection: date});
+        }
+        //-----------USANDO JWT----------
+        res.status(200).clearCookie("coderCookieToken").redirect("/session/render");
+    } catch (error) {
+        res.status(400).send(error);
+    }
 })
 
 sessionRouter.get("/render", passport.authenticate("jwt", {session: false, failureRedirect: "/session/login", successRedirect:"../views/products"}), async  (req, res) => {
@@ -38,7 +47,7 @@ sessionRouter.get("/registerRender", async (req, res) => {
 
 //------------------Register con Passport-------------------
 sessionRouter.post("/register",passport.authenticate("register",{session: false, failureRedirect: "/session/failregister"}), async (req, res) => {
-    res.redirect("/views/products?limit=2");
+    res.redirect("/session/login");
 })
 
 sessionRouter.get("/failregister", async (req, res) => {
@@ -62,6 +71,9 @@ sessionRouter.post("/login", passport.authenticate("login", {failureRedirect: "/
         req.user.cart = newCartId;
     }
 
+    let dateNow = new Date();
+    const resp = await userRepository.updateUser({email: req.user.email}, {last_connection: dateNow});
+
     let token = jwt.sign({
         logged: true,
         first_name: req.user.first_name,
@@ -69,7 +81,8 @@ sessionRouter.post("/login", passport.authenticate("login", {failureRedirect: "/
         age: req.user.age,
         email: req.user.email,
         role: req.user.role,
-        cart: req.user.cart
+        cart: req.user.cart,
+        last_connection: dateNow
     }, "sercretoIncreiblementeSeguro", {expiresIn: "24h"});
 
     res.cookie("coderCookieToken", token, {maxAge: 60*60*1000, httpOnly: true}).status(200).send("Success");
