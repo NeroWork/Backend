@@ -1,9 +1,11 @@
 <div class="d-flex flex-column align-items-center mt-5">
     <h2>Choose your rol:</h2>
+    <h3>To get premium you first need to upload the following documents: Identificacion, Comprobante de domicilio, Comprobante de estado de cuenta</h3>
     <select name="rol" id="rol-select">
         <option value="user">User</option>
         <option value="premium">Premium</option>
     </select>
+    <h3 id="warningDocs"></h3>
     <button class="btn btn-secondary my-3" onclick="changeRol('{{uid}}')">Change</button>
 </div>
 

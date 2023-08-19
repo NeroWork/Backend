@@ -18,7 +18,6 @@ const swaggerUiExpress = require("swagger-ui-express");
 //-----------CONFIGURAR SERVER -------------------
 const app = express();
 const PORT = dotenvParams.port || 8080;
-
 //----------------DB CONFIG---------------------------
 configObj.connectDB();
 
