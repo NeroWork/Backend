@@ -27,7 +27,7 @@ app.use(express.urlencoded({extended: true}));
 app.use("/static", express.static(__dirname+"/public"));
 
 //----------------------Cookies------------------------
-app.use(cookieParser("sercretoIncreiblementeSeguro"));
+app.use(cookieParser(dotenvParams.cookieSecret));
 
 //----------------------Cors------------------------
 app.use(cors());

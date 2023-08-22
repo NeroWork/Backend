@@ -1,5 +1,6 @@
 const {connect} = require("mongoose");
-const url = "mongodb+srv://nerowork16:COpxK4EvOyJhsLBN@cluster0.rfxhx7c.mongodb.net/ecommerce?retryWrites=true&w=majority"
+const { dotenvParams } = require("./dotenv");
+const url = dotenvParams.mongoUrl;
 
 const configObj = {
     connectDB: async () => {
