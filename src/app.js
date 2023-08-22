@@ -55,7 +55,7 @@ const specs = swaggerJSDoc(swaggerOptions);
 app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 //--------------LISTEN---------------
-const httpServer = app.listen(PORT, error => {
+const httpServer = app.listen(PORT, "0.0.0.0", error => {
     if(error){
         console.log(error);
     }
