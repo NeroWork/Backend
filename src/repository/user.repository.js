@@ -26,6 +26,10 @@ class UserRepository {
     async updateUser(filter, load){
         return await this.dao.update(filter, load);
     }
+
+    async deleteUserById(id) {
+        return await this.dao.delete(id);
+    }
 }
 
 module.exports = {

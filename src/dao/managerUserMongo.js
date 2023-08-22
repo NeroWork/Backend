@@ -19,6 +19,10 @@ class UserManager {
     async update(filter, load){
         return await userModel.updateOne(filter, load);
     }
+
+    async delete(id){
+        return await userModel.deleteOne({_id: id}); 
+    }
 }
 
 module.exports = {

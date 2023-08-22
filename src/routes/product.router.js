@@ -1,59 +1,23 @@
 const {Router} = require("express");
 const { authSession, authRoleJWT, authRoleOrOwnershipJWT } = require("../middleware/auth.middleware");
 const { ProductRepository } = require("../repository/product.repository");
+const nodemailer = require("nodemailer");
 
 const productRepository = new ProductRepository();
 
 const productRouter = Router();
 
-productRouter.get("/", async (req, res) => {
-    // //Traigo los params y defino valores por defecto
-    // const {limit=10, page=1, sort = null} = req.query;
-    // let {query = null} = req.query;
-    // //Si hay query, la parseo, sino, la defino como objeto vacio
-    // if(query){
-    //     query = JSON.parse(query);
-    // } else {
-    //     query = {};
-    // }
-    // //Seteo la configuracion
-    // let config = {};
-    // if(sort){
-    //     config = {limit, page, lean: true, sort: {price: sort}};
-    // } else{
-    //     config = {limit, page, lean: true};
-    // }
-    // //Envio los datos
-    // const data = await productRepository.getAllProducts(query, config);
-    // let resp = {};
-    // if(data.docs){
-    //     resp = {
-    //         status: "success",
-    //         payload: data.docs,
-    //         totalPages: data.totalPages,
-    //         prevPage: data.prevPage,
-    //         nextPage: data.nextPage,
-    //         page: data.page,
-    //         hasPrevPage: data.hasPrevPage,
-    //         hasNextPage: data.hasNextPage,
-    //     }
-    //     if(data.hasPrevPage){
-    //         resp = {...resp, prevLink: `http://localhost:8080/api/producto?limit=${limit}&page=${data.prevPage}`}
-    //     } else {
-    //         resp = {...resp, prevLink: null};
-    //     }
-    //     if(data.hasNextPage){
-    //         resp = {...resp, nextLink: `http://localhost:8080/api/producto?limit=${limit}&page=${data.nextPage}`}
-    //     } else{
-    //         resp = {...resp, nextLink: null}
-    //     }
-    // } else{
-    //     resp = {
-    //         status: "error"
-    //     }
-    // }
-    // res.send(resp);
+//transport to send emails
+const transport = nodemailer.createTransport({
+    service: "gmail",
+    port: 587,
+    auth: {
+        user: "coderprueba4@gmail.com",
+        pass: "yjprdwnqiaauspll"
+    }
+})
 
+productRouter.get("/", async (req, res) => {
     let prod = await productRepository.getAllProducts();
     res.status(200).send(prod);
 })
@@ -90,9 +54,26 @@ productRouter.put("/:pid", async (req, res) => {
 productRouter.delete("/:pid", async (req, res) => {
     try {        
         const idAux = req.params.pid;
-        if(idAux === undefined){
+        if(!idAux){
             return res.status(400).send({status:"error", error:"Invalid data"});
         }
+
+        const product = await productRepository.findProductById(idAux);
+        if(product.owner !== "admin"){
+            let result = transport.sendMail({
+                from: "Pagina Coder coderprueba4@gmail.com",
+                to: product.owner,
+                subject: "A product you own has been deleted",
+                html: `
+                    <div>Hola! Lamentablemente uno de los productos que te pertenecen a sido eliminado!</div>
+                    <div>
+                        <p>El producto eliminado fue: ${product.title}</p>
+                    </div>
+                `,
+                attachments: []
+            })
+        }
+
         const resp = await productRepository.deleteProduct(idAux);
         res.status(200).send(resp);
     } catch (error) {
