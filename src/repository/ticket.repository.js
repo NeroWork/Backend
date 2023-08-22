@@ -1,4 +1,4 @@
-const { TicketManagerMongo } = require("../dao/managerTicketMongo");
+const { TicketManagerMongo } = require("../Dao/managerTicketMongo");
 
 const ticketManager = new TicketManagerMongo();
 

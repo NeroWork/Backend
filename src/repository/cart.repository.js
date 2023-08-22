@@ -1,4 +1,4 @@
-const { CartManager } = require("../dao/managerCartMongo")
+const { CartManager } = require("../Dao/managerCartMongo")
 
 const cartManager = new CartManager();
 

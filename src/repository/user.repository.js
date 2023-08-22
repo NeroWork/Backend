@@ -1,4 +1,4 @@
-const { UserManager } = require("../dao/managerUserMongo");
+const { UserManager } = require("../Dao/managerUserMongo");
 
 const userManager = new UserManager;
 
